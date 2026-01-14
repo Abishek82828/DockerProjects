@@ -1,0 +1,22 @@
+services:
+  api:
+    build: ./app
+    container_name: project001-api
+    environment:
+      - LOG_PATH=/logs/requests.log
+    volumes:
+      - api_logs:/logs
+
+  nginx:
+    image: nginx:alpine
+    container_name: project001-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./site:/usr/share/nginx/html:ro
+    depends_on:
+      - api
+
+volumes:
+  api_logs:
